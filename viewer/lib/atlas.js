@@ -2,6 +2,9 @@ const fs = require('fs')
 const { Canvas, Image } = require('canvas')
 const path = require('path')
 
+/**
+ * @param {number} n
+ */
 function nextPowerOfTwo (n) {
   if (n === 0) return 1
   n--
@@ -13,6 +16,10 @@ function nextPowerOfTwo (n) {
   return n + 1
 }
 
+/**
+ * @param {string} basePath
+ * @param {string} name
+ */
 function readTexture (basePath, name) {
   if (name === 'missing_texture.png') {
     // grab ./missing_texture.png
@@ -21,6 +28,9 @@ function readTexture (basePath, name) {
   return fs.readFileSync(path.join(basePath, name), 'base64')
 }
 
+/**
+ * @param {{ directory: string; }} mcAssets
+ */
 function makeTextureAtlas (mcAssets) {
   const blocksTexturePath = path.join(mcAssets.directory, '/blocks')
   const textureFiles = fs.readdirSync(blocksTexturePath).filter(file => file.endsWith('.png'))
@@ -30,6 +40,7 @@ function makeTextureAtlas (mcAssets) {
   const tileSize = 16
 
   const imgSize = texSize * tileSize
+  // @ts-ignore
   const canvas = new Canvas(imgSize, imgSize, 'png')
   const g = canvas.getContext('2d')
 

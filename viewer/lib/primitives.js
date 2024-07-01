@@ -2,6 +2,9 @@ const THREE = require('three')
 const { MeshLine, MeshLineMaterial } = require('three.meshline')
 const { dispose3 } = require('./dispose')
 
+/**
+ * @param {THREE.Camera} camera
+ */
 function getMesh (primitive, camera) {
   if (primitive.type === 'line') {
     const color = primitive.color ? primitive.color : 0xff0000
@@ -48,6 +51,10 @@ function getMesh (primitive, camera) {
 }
 
 class Primitives {
+  /**
+   * @param {THREE.Scene} scene
+   * @param {THREE.Camera} camera
+   */
   constructor (scene, camera) {
     this.scene = scene
     this.camera = camera
@@ -76,6 +83,10 @@ class Primitives {
   }
 }
 
+/**
+ * @param {THREE.Geometry} geometry
+ * @param {boolean | undefined} independent
+ */
 function GridBoxGeometry (geometry, independent) {
   if (!(geometry instanceof THREE.BoxBufferGeometry)) {
     console.log("GridBoxGeometry: the parameter 'geometry' has to be of the type THREE.BoxBufferGeometry")
@@ -114,6 +125,11 @@ function GridBoxGeometry (geometry, independent) {
 
   newGeometry.setIndex(fullIndices)
 
+  /**
+   * @param {number} x
+   * @param {number} y
+   * @param {number} shift
+   */
   function indexSide (x, y, shift) {
     const indices = []
     for (let i = 0; i < y + 1; i++) {

@@ -12,16 +12,25 @@ for (const version of supportedVersions) {
   }
 }
 
+/**
+ * @param {string} version
+ */
 function toMajor (version) {
   const [a, b] = (version + '').split('.')
   return a + '.' + b
 }
 
+/**
+ * @param {string} version
+ */
 function minor (version) {
   const [, , c] = (version + '.0').split('.')
   return parseInt(c, 10)
 }
 
+/**
+ * @param {string} version
+ */
 function getVersion (version) {
   if (supportedVersions.indexOf(version) !== -1) return version
   const major = toMajor(version)

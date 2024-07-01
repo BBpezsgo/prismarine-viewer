@@ -15,14 +15,23 @@ const { World } = require('./world')
 const { getSectionGeometry } = require('./models')
 
 let blocksStates = null
+/** @type {World | null} */
 let world = null
 
+/**
+ * @param {number} x
+ * @param {number} y
+ * @param {number} z
+ */
 function sectionKey (x, y, z) {
   return `${x},${y},${z}`
 }
 
 const dirtySections = {}
 
+/**
+ * @param {Vec3} pos
+ */
 function setSectionDirty (pos, value = true) {
   const x = Math.floor(pos.x / 16) * 16
   const y = Math.floor(pos.y / 16) * 16

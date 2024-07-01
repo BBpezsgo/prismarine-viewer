@@ -3,6 +3,12 @@ const { Vec3 } = require('vec3')
 const EventEmitter = require('events')
 
 class WorldView extends EventEmitter {
+  /**
+   * @param {any} world
+   * @param {number} viewDistance
+   * @param {Vec3} position
+   * @param {EventEmitter | null} emitter
+   */
   constructor (world, viewDistance, position = new Vec3(0, 0, 0), emitter = null) {
     super()
     this.world = world
@@ -11,7 +17,19 @@ class WorldView extends EventEmitter {
     this.lastPos = new Vec3(0, 0, 0).update(position)
     this.emitter = emitter || this
 
-    this.listeners = {}
+    /**
+     * @type {{
+     *   [username: string]: {
+     *     entitySpawn: (e: any) => void
+     *     entityMoved: (e: any) => void
+     *     entityGone: (e: any) => void
+     *     chunkColumnLoad: (pos: any) => void
+     *     blockUpdate: (oldBlock: any, newBlock: any) => void
+     *   }
+     * }}
+     */// @ts-ignore
+    this.listeners = { }
+
     this.emitter.on('mouseClick', async (click) => {
       const ori = new Vec3(click.origin.x, click.origin.y, click.origin.z)
       const dir = new Vec3(click.direction.x, click.direction.y, click.direction.z)
@@ -21,6 +39,9 @@ class WorldView extends EventEmitter {
     })
   }
 
+  /**
+   * @param {import("mineflayer").Bot} bot
+   */
   listenToBot (bot) {
     const worldView = this
     this.listeners[bot.username] = {
@@ -56,6 +77,9 @@ class WorldView extends EventEmitter {
     }
   }
 
+  /**
+   * @param {import("mineflayer").Bot} bot
+   */
   removeListenersFromBot (bot) {
     for (const [evt, listener] of Object.entries(this.listeners[bot.username])) {
       bot.removeListener(evt, listener)
@@ -63,6 +87,9 @@ class WorldView extends EventEmitter {
     delete this.listeners[bot.username]
   }
 
+  /**
+   * @param {Vec3} pos
+   */
   async init (pos) {
     const [botX, botZ] = chunkPos(pos)
 
@@ -76,6 +103,9 @@ class WorldView extends EventEmitter {
     await this._loadChunks(positions)
   }
 
+  /**
+   * @param {Vec3[]} positions
+   */
   async _loadChunks (positions, sliceSize = 5, waitTime = 0) {
     for (let i = 0; i < positions.length; i += sliceSize) {
       await new Promise((resolve) => setTimeout(resolve, waitTime))
@@ -83,6 +113,9 @@ class WorldView extends EventEmitter {
     }
   }
 
+  /**
+   * @param {Vec3} pos
+   */
   async loadChunk (pos) {
     const [botX, botZ] = chunkPos(this.lastPos)
     const dx = Math.abs(botX - Math.floor(pos.x / 16))
@@ -97,11 +130,17 @@ class WorldView extends EventEmitter {
     }
   }
 
+  /**
+   * @param {Vec3} pos
+   */
   unloadChunk (pos) {
     this.emitter.emit('unloadChunk', { x: pos.x, z: pos.z })
     delete this.loadedChunks[`${pos.x},${pos.z}`]
   }
 
+  /**
+   * @param {Vec3} pos
+   */
   async updatePosition (pos, force = false) {
     const [lastX, lastZ] = chunkPos(this.lastPos)
     const [botX, botZ] = chunkPos(pos)

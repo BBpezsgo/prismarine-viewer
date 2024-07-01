@@ -6,6 +6,9 @@ for (const key of Object.keys(tints)) {
   tints[key] = prepareTints(tints[key])
 }
 
+/**
+ * @param {{ default: any; data: any; }} tints
+ */
 function prepareTints (tints) {
   const map = new Map()
   const defaultValue = tintToGl(tints.default)
@@ -22,6 +25,9 @@ function prepareTints (tints) {
   })
 }
 
+/**
+ * @param {number} tint
+ */
 function tintToGl (tint) {
   const r = (tint >> 16) & 0xff
   const g = (tint >> 8) & 0xff
@@ -228,6 +234,17 @@ function buildRotationMatrix (axis, degree) {
   return matrix
 }
 
+/**
+ * @param {{ getBlock: (arg0: any) => any; }} world
+ * @param {Vec3} cursor
+ * @param {{ faces: { [x: string]: any; }; from: any[]; to: any[]; rotation: { axis: any; angle: any; origin: any; }; }} element
+ * @param {any} doAO
+ * @param {{ sx?: any; sy?: any; sz?: any; positions: any; normals: any; colors: any; uvs: any; t_positions?: never[]; t_normals?: never[]; t_colors?: never[]; t_uvs?: never[]; indices: any; }} attr
+ * @param {number[][] | null} globalMatrix
+ * @param {any} globalShift
+ * @param {{ name: string | string[]; type: any; getProperties: () => { (): any; new (): any; power: any; }; }} block
+ * @param {string | number} biome
+ */
 function renderElement (world, cursor, element, doAO, attr, globalMatrix, globalShift, block, biome) {
   const cullIfIdentical = block.name.indexOf('glass') >= 0
 
@@ -362,6 +379,13 @@ function renderElement (world, cursor, element, doAO, attr, globalMatrix, global
   }
 }
 
+/**
+ * @param {number} sx
+ * @param {number} sy
+ * @param {number} sz
+ * @param {import('./world').World} world
+ * @param {any} blocksStates
+ */
 function getSectionGeometry (sx, sy, sz, world, blocksStates) {
   const attr = {
     sx: sx + 8,
@@ -461,6 +485,10 @@ function parseProperties (properties) {
   return json
 }
 
+/**
+ * @param {import("prismarine-block").Block} block
+ * @param {string} properties
+ */
 function matchProperties (block, properties) {
   if (!properties) { return true }
 
@@ -477,6 +505,9 @@ function matchProperties (block, properties) {
   return true
 }
 
+/**
+ * @param {import("prismarine-block").Block | null} block
+ */
 function getModelVariants (block, blockStates) {
   // air, cave_air, void_air and so on...
   if (block.name.includes('air')) return []

@@ -1,10 +1,17 @@
 const Chunks = require('prismarine-chunk')
 const mcData = require('minecraft-data')
 
+/**
+ * @param {number} x
+ * @param {number} z
+ */
 function columnKey (x, z) {
   return `${x},${z}`
 }
 
+/**
+ * @param {import('vec3').Vec3} pos
+ */
 function posInChunk (pos) {
   pos = pos.floored()
   pos.x &= 15
@@ -12,6 +19,9 @@ function posInChunk (pos) {
   return pos
 }
 
+/**
+ * @param {string | any[]} shapes
+ */
 function isCube (shapes) {
   if (!shapes || shapes.length !== 1) return false
   const shape = shapes[0]
@@ -19,27 +29,50 @@ function isCube (shapes) {
 }
 
 class World {
+  /**
+   * @param {string | number} version
+   */
   constructor (version) {
     this.Chunk = Chunks(version)
+    /** @type {{ [key: string]: any }} */
     this.columns = {}
+    /** @type {{ [key: string]: any }} */
     this.blockCache = {}
+    /** @type {{ [id: number]: mcData.Biome }} */
     this.biomeCache = mcData(version).biomes
   }
 
+  /**
+   * @param {number} x
+   * @param {number} z
+   * @param {any} json
+   */
   addColumn (x, z, json) {
     const chunk = this.Chunk.fromJson(json)
     this.columns[columnKey(x, z)] = chunk
     return chunk
   }
 
+  /**
+   * @param {number} x
+   * @param {number} z
+   */
   removeColumn (x, z) {
     delete this.columns[columnKey(x, z)]
   }
 
+  /**
+   * @param {number} x
+   * @param {number} z
+   */
   getColumn (x, z) {
     return this.columns[columnKey(x, z)]
   }
 
+  /**
+   * @param {import('vec3').Vec3} pos
+   * @param {any} stateId
+   */
   setBlockStateId (pos, stateId) {
     const key = columnKey(Math.floor(pos.x / 16) * 16, Math.floor(pos.z / 16) * 16)
 
@@ -52,6 +85,10 @@ class World {
     return true
   }
 
+  /**
+   * @param {import('vec3').Vec3} pos
+   * @returns {import('prismarine-block').Block | null}
+   */
   getBlock (pos) {
     const key = columnKey(Math.floor(pos.x / 16) * 16, Math.floor(pos.z / 16) * 16)
 

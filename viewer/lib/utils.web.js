@@ -2,13 +2,21 @@
 const THREE = require('three')
 
 const textureCache = {}
-function loadTexture (texture, cb) {
+/**
+ * @param {string} texture
+ * @param {(data: any) => void} callback
+ */
+function loadTexture (texture, callback) {
   if (!textureCache[texture]) {
     textureCache[texture] = new THREE.TextureLoader().load(texture)
   }
-  cb(textureCache[texture])
+  callback(textureCache[texture])
 }
 
+/**
+ * @param {string | URL} url
+ * @param {(data: any) => void} callback
+ */
 function loadJSON (url, callback) {
   const xhr = new XMLHttpRequest()
   xhr.open('GET', url, true)

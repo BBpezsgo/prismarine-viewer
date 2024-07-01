@@ -7,6 +7,9 @@ const { getVersion } = require('./version')
 const { Vec3 } = require('vec3')
 
 class Viewer {
+  /**
+   * @param {THREE.WebGLRenderer} renderer
+   */
   constructor (renderer) {
     this.scene = new THREE.Scene()
     this.scene.background = new THREE.Color('lightblue')
@@ -37,6 +40,9 @@ class Viewer {
     this.primitives.clear()
   }
 
+  /**
+   * @param {string} version
+   */
   setVersion (version) {
     version = getVersion(version)
     if (version === null) {
@@ -53,26 +59,50 @@ class Viewer {
     return true
   }
 
+  /**
+   * @param {number} x
+   * @param {number} z
+   * @param {any} chunk
+   */
   addColumn (x, z, chunk) {
     this.world.addColumn(x, z, chunk)
   }
 
+  /**
+   * @param {number} x
+   * @param {number} z
+   */
   removeColumn (x, z) {
     this.world.removeColumn(x, z)
   }
 
+  /**
+   * @param {Vec3} pos
+   * @param {any} stateId
+   */
   setBlockStateId (pos, stateId) {
     this.world.setBlockStateId(pos, stateId)
   }
 
+  /**
+   * @param {any} e
+   */
   updateEntity (e) {
     this.entities.update(e)
   }
 
+  /**
+   * @param {any} p
+   */
   updatePrimitive (p) {
     this.primitives.update(p)
   }
 
+  /**
+   * @param {Vec3} pos
+   * @param {number} yaw
+   * @param {number} pitch
+   */
   setFirstPersonCamera (pos, yaw, pitch) {
     if (pos) {
       let y = pos.y + this.playerHeight
@@ -82,6 +112,9 @@ class Viewer {
     this.camera.rotation.set(pitch, yaw, 0, 'ZYX')
   }
 
+  /**
+   * @param {import('node:events').EventEmitter} emitter
+   */
   listen (emitter) {
     emitter.on('entity', (e) => {
       this.updateEntity(e)

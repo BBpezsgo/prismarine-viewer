@@ -11,6 +11,11 @@ function getBufferFromStream (stream) {
   )
 }
 
+/**
+ * @param {number} X
+ * @param {number} Y
+ * @param {(arg0: number, arg1: number) => void} fun
+ */
 function spiral (X, Y, fun) { // TODO: move that to spiralloop package
   let x = 0
   let y = 0

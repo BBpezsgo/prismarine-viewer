@@ -45,6 +45,9 @@ function getEntityMesh (entity, scene) {
 }
 
 class Entities {
+  /**
+   * @param {any} scene
+   */
   constructor (scene) {
     this.scene = scene
     this.entities = {}
@@ -58,6 +61,9 @@ class Entities {
     this.entities = {}
   }
 
+  /**
+   * @param {import("prismarine-entity").Entity} entity
+   */
   update (entity) {
     if (!this.entities[entity.id]) {
       const mesh = getEntityMesh(entity, this.scene)

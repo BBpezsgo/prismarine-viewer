@@ -1,3 +1,6 @@
+/**
+ * @param {string} path
+ */
 function safeRequire (path) {
   try {
     return require(path)
@@ -11,6 +14,10 @@ const path = require('path')
 
 const textureCache = {}
 // todo not ideal, export different functions for browser and node
+/**
+ * @param {string} texture
+ * @param {(data: any) => void} cb
+ */
 function loadTexture (texture, cb) {
   if (process.platform === 'browser') {
     return require('./utils.web').loadTexture(texture, cb)
@@ -26,6 +33,10 @@ function loadTexture (texture, cb) {
   }
 }
 
+/**
+ * @param {string | URL} json
+ * @param {(data: any) => void} cb
+ */
 function loadJSON (json, cb) {
   if (process.platform === 'browser') {
     return require('./utils.web').loadJSON(json, cb)

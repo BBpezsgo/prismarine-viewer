@@ -5,11 +5,18 @@ const { loadTexture, loadJSON } = globalThis.isElectron ? require('./utils.elect
 const { EventEmitter } = require('events')
 const { dispose3 } = require('./dispose')
 
+/**
+ * @param {number} x
+ * @param {number} n
+ */
 function mod (x, n) {
   return ((x % n) + n) % n
 }
 
 class WorldRenderer {
+  /**
+   * @param {any} scene
+   */
   constructor (scene, numWorkers = 4) {
     this.sectionMeshs = {}
     this.active = false
@@ -75,6 +82,9 @@ class WorldRenderer {
     }
   }
 
+  /**
+   * @param {any} version
+   */
   setVersion (version) {
     this.version = version
     this.resetWorld()
@@ -107,6 +117,11 @@ class WorldRenderer {
     })
   }
 
+  /**
+   * @param {number} x
+   * @param {number} z
+   * @param {any} chunk
+   */
   addColumn (x, z, chunk) {
     this.loadedChunks[`${x},${z}`] = true
     for (const worker of this.workers) {
@@ -122,6 +137,10 @@ class WorldRenderer {
     }
   }
 
+  /**
+   * @param {number} x
+   * @param {number} z
+   */
   removeColumn (x, z) {
     delete this.loadedChunks[`${x},${z}`]
     for (const worker of this.workers) {
@@ -139,6 +158,10 @@ class WorldRenderer {
     }
   }
 
+  /**
+   * @param {Vec3} pos
+   * @param {any} stateId
+   */
   setBlockStateId (pos, stateId) {
     for (const worker of this.workers) {
       worker.postMessage({ type: 'blockUpdate', pos, stateId })
@@ -152,6 +175,9 @@ class WorldRenderer {
     if ((pos.z & 15) === 15) this.setSectionDirty(pos.offset(0, 0, 16))
   }
 
+  /**
+   * @param {Vec3} pos
+   */
   setSectionDirty (pos, value = true) {
     // Dispatch sections to workers based on position
     // This guarantees uniformity accross workers and that a given section
@@ -164,7 +190,7 @@ class WorldRenderer {
   // Listen for chunk rendering updates emitted if a worker finished a render and resolve if the number
   // of sections not rendered are 0
   waitForChunksToRender () {
-    return new Promise((resolve, reject) => {
+    return /** @type {Promise<void>} */(new Promise((resolve, reject) => {
       if (Array.from(this.sectionsOutstanding).length === 0) {
         resolve()
         return
@@ -177,7 +203,7 @@ class WorldRenderer {
         }
       }
       this.renderUpdateEmitter.on('update', updateHandler)
-    })
+    }))
   }
 }
 

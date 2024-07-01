@@ -20,6 +20,7 @@ for (const version of supportedVersions) {
   const assets = mcAssets(version)
   const atlas = makeTextureAtlas(assets)
   const out = fs.createWriteStream(path.resolve(texturesPath, version + '.png'))
+  /** @ts-ignore @type {import('canvas').PNGStream} */
   const stream = atlas.canvas.pngStream()
   stream.on('data', (chunk) => out.write(chunk))
   stream.on('end', () => console.log('Generated textures/' + version + '.png'))

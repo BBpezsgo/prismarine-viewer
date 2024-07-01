@@ -1,8 +1,15 @@
+/**
+ * @param {string} name
+ */
 function cleanupBlockName (name) {
   if (name.startsWith('block') || name.startsWith('minecraft:block')) return name.split('/')[1]
   return name
 }
 
+/**
+ * @param {string} name
+ * @param {{ [key: string]: any }} blocksModels
+ */
 function getModel (name, blocksModels) {
   name = cleanupBlockName(name)
   const data = blocksModels[name]

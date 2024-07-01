@@ -66,7 +66,8 @@ class WorldRenderer {
           this.renderUpdateEmitter.emit('update')
         }
       }
-      if (worker.on) worker.on('message', (data) => { worker.onmessage({ data }) })
+      // @ts-ignore
+      if (worker['on']) worker.on('message', (data) => { worker.onmessage({ data }) })
       this.workers.push(worker)
     }
   }

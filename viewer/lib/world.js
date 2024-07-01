@@ -1,3 +1,4 @@
+/** @ts-ignore @type {typeof import('prismarine-chunk/index')} */
 const Chunks = require('prismarine-chunk')
 const mcData = require('minecraft-data')
 

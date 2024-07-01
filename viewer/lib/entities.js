@@ -4,6 +4,24 @@ const TWEEN = require('@tweenjs/tween.js')
 const Entity = require('./entity/Entity')
 const { dispose3 } = require('./dispose')
 
+/**
+ * @param {string} text
+ * @param {any} font
+ */
+function getTextWidth(text, font) {
+  /** @type {HTMLCanvasElement} */ // @ts-ignore re-use canvas object for better performance
+  const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"))
+  const context = canvas.getContext('2d')
+  if (!context) { throw null }
+  context.font = font
+  const metrics = context.measureText(text)
+  return metrics.width
+}
+
+/**
+ * @param {import('prismarine-entity').Entity} entity
+ * @param {any} scene
+ */
 function getEntityMesh (entity, scene) {
   if (entity.name) {
     try {
@@ -11,22 +29,36 @@ function getEntityMesh (entity, scene) {
 
       if (entity.username !== undefined) {
         const canvas = document.createElement('canvas')
-        canvas.width = 500
-        canvas.height = 100
 
         const ctx = canvas.getContext('2d')
-        ctx.font = '50pt Arial'
-        ctx.fillStyle = '#000000'
-        ctx.textAlign = 'left'
-        ctx.textBaseline = 'top'
+        if (ctx) {
+          const textWidth = getTextWidth(entity.username, `100px Minecraftia`)
 
-        const txt = entity.username
-        ctx.fillText(txt, 100, 0)
+          canvas.style.imageRendering = 'pixelated'
+          canvas.height = 100
+          canvas.width = Math.round(canvas.height * (textWidth / 100))
+
+          ctx.msImageSmoothingEnabled = false
+          ctx.mozImageSmoothingEnabled = false
+          ctx.webkitImageSmoothingEnabled = false
+          ctx.imageSmoothingEnabled = false
+
+          ctx.font = `${canvas.height}px Minecraftia`
+          ctx.fillStyle = '#0008'
+          ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+          ctx.fillStyle = '#fff'
+          ctx.textAlign = 'left'
+          ctx.textBaseline = 'top'
+  
+          ctx.fillText(entity.username, 0, 0)
+        }
 
         const tex = new THREE.Texture(canvas)
         tex.needsUpdate = true
         const spriteMat = new THREE.SpriteMaterial({ map: tex })
         const sprite = new THREE.Sprite(spriteMat)
+        sprite.scale.setY(.5)
         sprite.position.y += entity.height + 0.6
 
         e.mesh.add(sprite)

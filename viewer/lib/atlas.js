@@ -46,7 +46,7 @@ function makeTextureAtlas (mcAssets) {
 
   const texturesIndex = {}
 
-  for (const i in textureFiles) {
+  for (let i = 0; i < textureFiles.length; i++) {
     const x = (i % texSize) * tileSize
     const y = Math.floor(i / texSize) * tileSize
 

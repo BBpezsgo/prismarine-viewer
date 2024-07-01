@@ -509,6 +509,7 @@ function matchProperties (block, properties) {
  * @param {import("prismarine-block").Block | null} block
  */
 function getModelVariants (block, blockStates) {
+  if (!block) return []
   // air, cave_air, void_air and so on...
   if (block.name.includes('air')) return []
   const state = blockStates[block.name] ?? blockStates.missing_texture

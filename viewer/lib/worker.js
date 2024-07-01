@@ -78,10 +78,9 @@ setInterval(() => {
 
   // const start = performance.now()
   for (const key of sections) {
-    let [x, y, z] = key.split(',')
-    x = parseInt(x, 10)
-    y = parseInt(y, 10)
-    z = parseInt(z, 10)
+    const x = Number.parseInt(key.split(',')[0], 10)
+    const y = Number.parseInt(key.split(',')[1], 10)
+    const z = Number.parseInt(key.split(',')[2], 10)
     const chunk = world.getColumn(x, z)
     if (chunk && chunk.sections[Math.floor(y / 16)]) {
       delete dirtySections[key]
